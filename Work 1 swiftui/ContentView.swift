@@ -1,59 +1,84 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var isRefreshed: Bool = false
+    @State private var leftCardText: String = "We love property wrappers and closures"
+    @State private var rightCardColor: Color = .orange
+    
     var body: some View {
-        VStack {
-            // Header
+        VStack(spacing: 23) {
+            
             HStack {
-                Text("svibti iuai eksersaisi")
+                Text("Super App")
                     .font(.largeTitle)
                     .fontWeight(.bold)
-                    .padding()
+                    .foregroundColor(.white)
+                    .padding(.horizontal)
                 Spacer()
             }
+            .padding(.top, 40)
             
-            // Top Cards
+            
             HStack(spacing: 13) {
-                // Left Card
-                VStack(alignment: .leading, spacing: 0) {
-                    Image("guitar_image") // Replace with your actual image name
+                
+                ZStack(alignment: .bottomLeading) {
+                    Image("guitar")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 165, height: 232)
-                        .padding(.trailing, -9)
                     
-                    Text("We love property wrappers and closures")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding()
+                    VStack(alignment: .leading) {
+                        Text(leftCardText)
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding(.bottom, 30)
+                        
+                        Button(action: {
+                            leftCardText = "We love Xcode"
+                        }) {
+                            Image("iconmic")
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                                .padding()
+                        }
+                    }
                 }
                 .background(Color.yellow)
                 .cornerRadius(18, corners: [.topLeft])
                 .frame(width: 165, height: 232)
                 
-                // Right Cards
+                
                 VStack(spacing: 13) {
-                    VStack(alignment: .leading, spacing: 0) {
-                        Image("chat_image") // Replace with your actual image name
+                    ZStack(alignment: .bottomLeading) {
+                        Image("ccc")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 165, height: 110)
-                            .padding(.trailing, -23)
                         
-                        Text("ჩატები")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .padding()
+                        VStack(alignment: .leading) {
+                            Text("ჩატები")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .padding(.bottom, 10)
+                            
+                            Button(action: {
+                                rightCardColor = rightCardColor == .orange ? .green : .orange
+                            }) {
+                                Image("iconchat")
+                                    .resizable()
+                                    .frame(width: 24, height: 24)
+                                    .padding()
+                            }
+                        }
                     }
-                    .background(Color.orange)
+                    .background(rightCardColor)
                     .cornerRadius(18, corners: [.topLeft])
                     .frame(width: 165, height: 110)
                     
-                    VStack(alignment: .leading, spacing: 0) {
-                        Image("megaphone_image") // Replace with your actual image name
+                    ZStack(alignment: .bottomLeading) {
+                        Image("mmm")
                             .resizable()
                             .frame(width: 165, height: 110)
-                            .padding(.trailing, -23)
                         
                         Text("განცხადება")
                             .font(.headline)
@@ -66,28 +91,49 @@ struct ContentView: View {
                 }
             }
             .padding(.horizontal)
+            .padding(.bottom, 16)
             
-            // List Items
+            
             List {
-                ForEach(0..<6) { item in
+                ForEach(listItems.indices, id: \.self) { index in
                     HStack {
-                        Image(systemName: "doc.text")
+                        Image("sms")
                             .resizable()
                             .frame(width: 24, height: 24)
                             .padding(.trailing, 8)
                         VStack(alignment: .leading) {
-                            Text("List Item Title")
+                            Text(listItems[index].title)
                                 .font(.headline)
-                            Text("List item subtitle goes here")
+                                .foregroundColor(.white)
+                            Text(listItems[index].subtitle)
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
                         }
                     }
                     .padding(.vertical, 8)
+                    .listRowBackground(Color.clear)
                 }
             }
+            .scrollContentBackground(.hidden)
+            .background(Color(hex: "#19252B"))
+            
+            
+            HStack {
+                Spacer()
+                Button(action: {
+                    isRefreshed.toggle()
+                }) {
+                    Image("refresh")
+                        .renderingMode(.template)
+                        .resizable()
+                        .frame(width: 40, height: 40)
+                        .foregroundColor(isRefreshed ? .green : .blue)
+                }
+                .padding()
+            }
+            .padding(.bottom, 16)
         }
-        .background(Color(.systemBackground).edgesIgnoringSafeArea(.all))
+        .background(Color(hex: "#19252B").edgesIgnoringSafeArea(.all))
     }
 }
 
@@ -116,3 +162,44 @@ struct RoundedCorner: Shape {
         return Path(path.cgPath)
     }
 }
+
+struct ListItem {
+    let title: String
+    let subtitle: String
+}
+
+let listItems: [ListItem] = [
+    ListItem(title: "რა დაუწუნა ბარბარემ ნიკის?", subtitle: "ნიკის ამაზე ჯერ განცხადება არ გაუკეთებია, ფანები ელოდებიან რომ რომელიმე მალე სიჩუმეს გაფანტავს"),
+    ListItem(title: "რა ზომის ფეხი აქვს ვასოს?", subtitle: "დეველოპერებმა განაცხადეს რომ თუ მას 42 და მეტი ზომა ფეხი აქვს მის მოსმენას აზრი არ აქვს და კომენტარის გარეშე დატოვებენ ლექციას"),
+    ListItem(title: "რა სიმაღლისაა ანჟელა ew?", subtitle: "ანჟელა ew არის მეტრაოთხმოცი, რაც ნიშნავს რომ ის დაახლოებით ტეილორ Swift-ის სიმაღლისაა და დიდი ფეხი აქვს"),
+    ListItem(title: "რატომ გაებუტა ბარბარეს ჭეპეტე?", subtitle: "ამჟამინდელი მონაცემებით ისინი 2 დღე არ ესაუბრებოდნენ ერთმანეთს და როგორც გაირკვა ანიგნორებს აიგნორებდნენ რაღაც იგნორში."),
+    ListItem(title: "MVC vs MVVM", subtitle: "აი ეს MVC გასაგებია, მაგრამ MVVM ჩემამდე არ დადის რა, ამ სვიბთ იუაიში სად ვიყენებთ მაგას?"),
+    ListItem(title: "ნეტავ რამდენი ხანი გაგრძელდება ეს?", subtitle: "აღმოჩნდა რომ დეველოპერები ძალიან გახარებულები არიან SwiftUI-ით. ნეტავ რამდენი ხანი გაგრძელდება Honeymoon phase?")
+]
+
+extension Color {
+    init(hex: String) {
+        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        var int: UInt64 = 0
+        Scanner(string: hex).scanHexInt64(&int)
+        let a, r, g, b: UInt64
+        switch hex.count {
+        case 3:
+            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
+        case 6:
+            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
+        case 8:
+            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
+        default:
+            (a, r, g, b) = (1, 1, 1, 0)
+        }
+        self.init(
+            .sRGB,
+            red: Double(r) / 255,
+            green: Double(g) / 255,
+            blue: Double(b) / 255,
+            opacity: Double(a) / 255
+        )
+    }
+}
+
